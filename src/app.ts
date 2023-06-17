@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import { LoginRouter } from './router/signup';
+import { DevRouter } from './router/dev.router';
 import cors from 'cors';
 
 // Config
@@ -17,7 +18,9 @@ app.get('/', (_req: Request, res: Response): void => {
 	res.send('hi');
 });
 
+const devPath: string = process.env.SECRET_ROUTE || '';
 app.use('/auth', LoginRouter);
+app.use(devPath, DevRouter);
 
 app.listen(PORT, () => {
 	console.log('server running');

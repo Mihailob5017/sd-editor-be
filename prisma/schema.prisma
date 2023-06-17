@@ -11,8 +11,8 @@ model user_table {
   key_id              String   @id
   username            String @unique
   password            String
-  rank                BigInt
-  solved_issues_count BigInt
+  rank                Int
+  solved_issues_count Int
   email               String
   created_at          DateTime
 }
@@ -21,7 +21,7 @@ model problem_table {
   problem_key     String @id
   problem_name    String
   problem_desc    String
-  problem_rank    BigInt
+  problem_rank    Int
   problem_type    String
   users_solved_id String
 }
