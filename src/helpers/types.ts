@@ -18,19 +18,17 @@ export interface CustomErrorType {
 	message: string;
 }
 
-export interface SignupUserInterface {
-	key_id: string;
-	username: string;
-	password: string;
-	rank: number | bigint;
-	solved_issues_count: number | bigint;
-	email: string;
-	created_at: Date;
-}
-
 export interface SignupResponseInterface {
 	isSuccessful: boolean;
 	clientMessage: string;
 	error: null | CustomErrorType;
-	data: SignupUserInterface | null;
+	data: {
+		key_id: string;
+		username: string;
+		password: string;
+		rank: number | bigint;
+		solved_issues_count: number | bigint;
+		email: string;
+		created_at: Date;
+	} | null;
 }
