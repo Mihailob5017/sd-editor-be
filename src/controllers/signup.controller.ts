@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import {
 	checkIfUsernameExists,
 	genericPassword,
@@ -9,8 +10,9 @@ import { errorObjects, prismaClient, successObject } from '../helpers/contants';
 import { v4 as uuidv4 } from 'uuid';
 
 import bcrypt from 'bcryptjs';
-import { SignupResponseInterface } from 'helpers/types';
+import { SignupResponseInterface, TokenPayloadInterface } from 'helpers/types';
 import { findMissingValue } from '../helpers/functions';
+import { json } from 'body-parser';
 export const SignUpController = async (
 	_req: Request,
 	_res: Response
@@ -34,6 +36,7 @@ export const SignUpController = async (
 				inputData.password || genericPassword,
 				8
 			);
+
 			const currentRank: number = 0;
 			const solvedIssuesCount: number = 0;
 			const currentDay: Date = new Date();
@@ -48,11 +51,19 @@ export const SignUpController = async (
 					solved_issues_count: Number(solvedIssuesCount),
 				},
 			});
-
+			const tokenPayload: TokenPayloadInterface = {
+				key_id: newUser.key_id || '',
+				username: newUser.username || '',
+			};
+			const jsonToken: string = jwt.sign(
+				tokenPayload,
+				process.env.SECRET_JWT_KEY || ''
+			);
 			const responseObject: SignupResponseInterface = {
 				isSuccessful: true,
 				clientMessage: successObject.accountSuccessfullyCreated,
 				error: null,
+				json_token: jsonToken,
 				data: {
 					...newUser,
 					solved_issues_count: Number(newUser.solved_issues_count),

@@ -21,6 +21,7 @@ export interface CustomErrorType {
 export interface SignupResponseInterface {
 	isSuccessful: boolean;
 	clientMessage: string;
+	json_token?: string;
 	error: null | CustomErrorType;
 	data: {
 		key_id: string;
@@ -31,4 +32,9 @@ export interface SignupResponseInterface {
 		email: string;
 		created_at: Date;
 	} | null;
+}
+
+export interface TokenPayloadInterface {
+	key_id: string;
+	username: string;
 }
