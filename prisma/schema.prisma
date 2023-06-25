@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user_table {
+  key_id              String   @id
+  username            String @unique
+  password            String
+  rank                Int
+  solved_issues_count Int
+  email               String
+  created_at          DateTime
+}
+
+model problem_table {
+  problem_key     String @id
+  problem_name    String
+  problem_desc    String
+  problem_rank    Int
+  problem_type    String
+  users_solved_id String
+}
+
+model test_scenario_table {
+  solution_key          String @id
+  input_value           String
+  exoected_output_type  String
+  expected_output_value String
+  problem_id            String
+}
