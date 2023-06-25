@@ -15,6 +15,7 @@ export interface ValidSignupParamSchema extends SignupParamSchema {
 	} | null;
 	isSuccess: boolean;
 }
+
 export interface CustomErrorType {
 	field: string;
 	message: string;
