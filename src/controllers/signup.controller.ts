@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import {
 	checkIfUsernameExists,
 	genericPassword,
@@ -6,8 +5,6 @@ import {
 } from '../helpers/validation';
 import { CustomError } from '../helpers/errors';
 import {
-	JWTKey,
-	JWTOptions,
 	RedisClient,
 	errorObjects,
 	prismaClient,
@@ -20,9 +17,7 @@ import {
 	SignupResponseInterface,
 	TokenPayloadInterface,
 } from 'helpers/types';
-import { findMissingValue } from '../helpers/functions';
-import { userInfo } from 'os';
-import { json } from 'body-parser';
+import { findMissingValue, signJWTToken } from '../helpers/functions';
 
 export const SignUpController: ControllerType = async (_req, _res) => {
 	try {
@@ -64,7 +59,7 @@ export const SignUpController: ControllerType = async (_req, _res) => {
 				username: newUser.username || '',
 			};
 
-			const jsonToken: string = jwt.sign(tokenPayload, JWTKey, JWTOptions);
+			const jsonToken = signJWTToken(tokenPayload);
 
 			await RedisClient.set(inputData.username || '', jsonToken).catch(
 				(err) => {

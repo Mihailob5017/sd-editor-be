@@ -14,6 +14,7 @@ export const DeleteAllUsers: ControllerType = async (_req, _res) => {
 	try {
 		if (_req.body.areYouSure === 'Yes') {
 			await prismaClient.user_table.deleteMany();
+			await RedisClient.flushDb();
 			_res.status(200).json({ success: true });
 		}
 	} catch (error) {

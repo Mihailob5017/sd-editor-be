@@ -27,8 +27,9 @@ export const errorObjects = {
 
 export const successObject = {
 	accountSuccessfullyCreated: 'Account Successfully Created',
+	succesfullyLoggedIn: 'Successfully Logged in!',
 };
 
 export const RedisClient = createClient();
 export const JWTKey = process.env.SECRET_JWT_KEY || 'qweqweqe';
-export const JWTOptions: SignOptions = { expiresIn: '12h' };
+export const JWTOptions: SignOptions = { expiresIn: '2h' };
