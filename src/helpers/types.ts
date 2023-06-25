@@ -1,3 +1,5 @@
+import { Request, Response } from 'express';
+
 export interface SignupParamSchema {
 	data: {
 		password?: string | undefined;
@@ -37,4 +39,12 @@ export interface SignupResponseInterface {
 export interface TokenPayloadInterface {
 	key_id: string;
 	username: string;
+}
+
+export type ControllerType = (_req: Request, _res: Response) => Promise<void>;
+
+export interface UserCredentialsInterface {
+	username: string;
+	password: string;
+	email?: string;
 }

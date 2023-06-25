@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import {
 	checkIfUsernameExists,
@@ -6,17 +5,26 @@ import {
 	validateSignup,
 } from '../helpers/validation';
 import { CustomError } from '../helpers/errors';
-import { errorObjects, prismaClient, successObject } from '../helpers/contants';
+import {
+	JWTKey,
+	JWTOptions,
+	RedisClient,
+	errorObjects,
+	prismaClient,
+	successObject,
+} from '../helpers/contants';
 import { v4 as uuidv4 } from 'uuid';
-
 import bcrypt from 'bcryptjs';
-import { SignupResponseInterface, TokenPayloadInterface } from 'helpers/types';
+import {
+	ControllerType,
+	SignupResponseInterface,
+	TokenPayloadInterface,
+} from 'helpers/types';
 import { findMissingValue } from '../helpers/functions';
+import { userInfo } from 'os';
 import { json } from 'body-parser';
-export const SignUpController = async (
-	_req: Request,
-	_res: Response
-): Promise<void> => {
+
+export const SignUpController: ControllerType = async (_req, _res) => {
 	try {
 		const yupValidation = await validateSignup(_req.body);
 		if (!yupValidation.isSuccess && yupValidation.error) {
@@ -55,10 +63,19 @@ export const SignUpController = async (
 				key_id: newUser.key_id || '',
 				username: newUser.username || '',
 			};
-			const jsonToken: string = jwt.sign(
-				tokenPayload,
-				process.env.SECRET_JWT_KEY || ''
+
+			const jsonToken: string = jwt.sign(tokenPayload, JWTKey, JWTOptions);
+
+			await RedisClient.set(inputData.username || '', jsonToken).catch(
+				(err) => {
+					console.log(err);
+					throw new CustomError({
+						field: 'token',
+						message: errorObjects.tokenError,
+					});
+				}
 			);
+
 			const responseObject: SignupResponseInterface = {
 				isSuccessful: true,
 				clientMessage: successObject.accountSuccessfullyCreated,

@@ -1,5 +1,7 @@
+// TODO: Create error objects for DEV and create error objects for Client
 import { PrismaClient } from '@prisma/client';
-
+import { SignOptions } from 'jsonwebtoken';
+import { createClient } from 'redis';
 export const prismaClient: PrismaClient = new PrismaClient();
 
 export const SignupValidationMessages = {
@@ -18,8 +20,15 @@ export const errorObjects = {
 	unknowError: 'Unknown error',
 	missingField: 'Missing values. Check in for the "field" response',
 	somethingWentWrong: 'Something went wrong when signing up',
+	userDoesntExist: 'No user found under that username',
+	passwordsDontMatch: 'Passwords dont match',
+	tokenError: 'Seems to be a problem with signing the JWT',
 };
 
 export const successObject = {
 	accountSuccessfullyCreated: 'Account Successfully Created',
 };
+
+export const RedisClient = createClient();
+export const JWTKey = process.env.SECRET_JWT_KEY || 'qweqweqe';
+export const JWTOptions: SignOptions = { expiresIn: '12h' };
